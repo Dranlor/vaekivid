@@ -1,30 +1,31 @@
 import "./CheckoutPage.css";
 import CheckoutContainer from "../components/CheckoutComponent/CheckoutContainer.js";
-import {useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import ShoppingCartMain from "../components/ShoppingCartMain/ShoppingCartMain";
 import Card from "../components/Cards/Card";
 import { setEmail } from "../features/cart/cartSlice";
 
 function CheckoutPage() {
-  const dispatch = useDispatch()
-  const emailHandler  = (event)=>{
-    dispatch(setEmail(event.target.value))
-  }
+  const dispatch = useDispatch();
+  const emailHandler = (event) => {
+    dispatch(setEmail(event.target.value));
+  };
   //redux magic. very good explanation -> https://www.youtube.com/watch?v=bbkBuqC1rU4
-  const {cartItems, total, email } = useSelector((store) => store.cart);
-  
+  const { cartItems, total, email } = useSelector((store) => store.cart);
+
   const paymentHandler = () => {
     const randomId = Math.floor(Math.random() * 10000000).toString();
     let payloadObj = {
       amount: total,
       currency: "EUR",
-      access_key: "4e5d2fcd-c766-47c4-aa74-6197cf7ddb5e",
+      access_key: "c03bdca0-9da1-44db-898b-8545b924b32b",
       merchant_reference: randomId,
       merchant_return_url:
-        "https://tatall.pages.taltech.ee/iti0105-2022/#/aitah?email="+email,
+        "https://tatall.pages.taltech.ee/iti0105-2022/#/aitah?email=" + email,
       merchant_notification_url: "https://montonio.com/orders/payment_webhook",
-      payment_information_unstructured: "Payment for order " +email+" "+ randomId,
+      payment_information_unstructured:
+        "Payment for order " + email + " " + randomId,
       preselected_locale: "et",
       checkout_email: email,
     };
@@ -37,7 +38,7 @@ function CheckoutPage() {
       .then(function (response) {
         console.log(JSON.stringify(response.data));
         window.open(
-          "https://sandbox-payments.montonio.com?payment_token=" + response.data
+          "https://payments.montonio.com?payment_token=" + response.data
         );
       })
       .catch(function (error) {
@@ -64,7 +65,7 @@ function CheckoutPage() {
           })}
         </ShoppingCartMain>
       </div>
-      
+
       <div className="totalLabel">
         <b>Kokku: </b> {total}€
       </div>
@@ -75,10 +76,11 @@ function CheckoutPage() {
       <div className="leftContainer">
         <CheckoutContainer />
       </div>
-      <div className="email">  <h3 className="title">Email</h3>
-      <input name="email" placeholder="Email" onChange={emailHandler}></input></div>
-     
-     
+      <div className="email">
+        {" "}
+        <h3 className="title">Email</h3>
+        <input name="email" placeholder="Email" onChange={emailHandler}></input>
+      </div>
     </div>
   );
 }
